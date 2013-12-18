@@ -1,0 +1,3 @@
+[submodule "assets/editor/source"]
+	path = assets/editor/source
+	url = git@github.com:lepture/editor.git

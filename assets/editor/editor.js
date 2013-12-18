@@ -6726,7 +6726,6 @@ var shortcuts = {
   'Cmd-B': toggleBold,
   'Cmd-I': toggleItalic,
   'Cmd-K': drawLink,
-  'Cmd-M': drawEmailLink,
   'Cmd-Alt-I': drawImage,
   "Cmd-'": toggleBlockquote,
   'Cmd-Alt-L': toggleOrderedList,
@@ -6947,15 +6946,6 @@ function drawLink(editor) {
   _replaceSelection(cm, stat.link, '[', '](http://)');
 }
 
-/**
- * Action for drawing a link.
- */
-function drawEmailLink(editor) {
-  var cm = editor.codemirror;
-  var stat = getState(cm);
-  _replaceSelection(cm, stat.link, '[', '](mailto:)');
-}
-
 
 /**
  * Action for drawing an img.
@@ -6984,6 +6974,33 @@ function redo(editor) {
   var cm = editor.codemirror;
   cm.redo();
   cm.focus();
+}
+
+/**
+ * Preview action.
+ */
+function togglePreview(editor) {
+  var toolbar = editor.toolbar.preview;
+  var parse = editor.constructor.markdown;
+  var cm = editor.codemirror;
+  var wrapper = cm.getWrapperElement();
+  var preview = wrapper.lastChild;
+  if (!/editor-preview/.test(preview.className)) {
+    preview = document.createElement('div');
+    preview.className = 'editor-preview';
+    wrapper.appendChild(preview);
+  }
+  if (/editor-preview-active/.test(preview.className)) {
+    preview.className = preview.className.replace(
+      /\s*editor-preview-active\s*/g, ''
+    );
+    toolbar.className = toolbar.className.replace(/\s*active\s*/g, '')
+  } else {
+    preview.className += ' editor-preview-active';
+    toolbar.className += ' active';
+  }
+  var text = cm.getValue();
+  preview.innerHTML = parse(text);
 }
 
 
@@ -7047,14 +7064,11 @@ var toolbar = [
   '|',
 
   {name: 'link', action: drawLink},
-  {name: 'emaillink', action: drawEmailLink},
   {name: 'image', action: drawImage},
   '|',
-  {name: 'undo', action: undo},
-  {name: 'redo', action: redo},
-  '|',
+
   {name: 'info', action: 'http://lab.lepture.com/editor/markdown'},
-  //'preview',
+  {name: 'preview', action: togglePreview},
   {name: 'fullscreen', action: toggleFullScreen}
 ]
 
@@ -7088,6 +7102,16 @@ function Editor(options) {
  * Default toolbar elements.
  */
 Editor.toolbar = toolbar;
+
+/**
+ * Default markdown render.
+ */
+Editor.markdown = function(text) {
+  if (window.marked) {
+    // use marked as markdown parser
+    return marked(text);
+  }
+};
 
 /**
  * Render editor to the given element.
@@ -7247,7 +7271,6 @@ Editor.toggleBlockquote = toggleBlockquote;
 Editor.toggleUnOrderedList = toggleUnOrderedList;
 Editor.toggleOrderedList = toggleOrderedList;
 Editor.drawLink = drawLink;
-Editor.drawEmailLink = drawEmailLink;
 Editor.drawImage = drawImage;
 Editor.undo = undo;
 Editor.redo = redo;
@@ -7273,9 +7296,6 @@ Editor.prototype.toggleOrderedList = function() {
 };
 Editor.prototype.drawLink = function() {
   drawLink(this);
-};
-Editor.prototype.drawEmailLink = function() {
-  drawEmailLink(this);
 };
 Editor.prototype.drawImage = function() {
   drawImage(this);
