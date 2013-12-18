@@ -2,17 +2,28 @@
 <extension id="editor_for_symphony" status="experimental" xmlns="http://getsymphony.com/schemas/extension/1.0">
 	<name>Editor for Symphony</name>
 	<description>Adds Editor, the markdown editor, by Hsiaoming Yang, github.com/lepture/editor, to every markdown textarea field on every entry page.</description>
-	<repo type="github">https://github.com/bzerangue/editor_for_symphony</repo>
+	<repo type="github">https://github.com/scjalliance/editor_for_symphony</repo>
 	<types>
 		<type>Text Formatters</type>
 	</types>
 	<authors>
+		<author>
+			<name github="dustywilson">Dusty Wilson</name>
+			<website>http://www.scjalliance.com/</website>
+		</author>
+		<author>
+			<name github="joshuasjoding">Joshua Sjoding</name>
+			<website>http://www.scjalliance.com/</website>
+		</author>
 		<author>
 			<name github="bzerangue" symphony="bzerangue">Brian Zerangue</name>
 			<website>http://brianzerangue.com</website>
 		</author>
 	</authors>
 	<releases>
+		<release version="0.3" date="2013-12-18" min="2.3">
+			Updated lepture/editor to newest version at time of update.
+		</release>
 		<release version="0.2" date="2013-09-16" min="2.3">
 			- @iwyg fixed the multiple instantiation of the editor; can apply to multiple textareas
 			- activated undo and redo functionality.
