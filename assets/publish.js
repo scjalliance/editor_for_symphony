@@ -7,11 +7,13 @@
 	$.fn.editorify = function (options) {
 		options = options || {};
 		return this.each(function (index, element) {
+			var textAreaHeight = $(element).height() + 35;
 			var editor;
 			options.element = element;
 			editor = new Editor(options);
 			$(element).data('editor', editor);
 			editor.render();
+			editor.codemirror.setSize(null, textAreaHeight);
 		});
 	};
 }(this.jQuery, this.Editor));
@@ -33,9 +35,6 @@
 				'|',
 				{name: 'link', action: Editor.drawLink},
 				{name: 'image', action: Editor.drawImage},
-				'|',
-				{name: 'preview', action: Editor.togglePreview},
-				{name: 'fullscreen', action: Editor.toggleFullScreen}
 			]
 		});
 	});
